@@ -5,11 +5,30 @@ import { Filter } from './Filter/Filter';
 import { nanoid } from 'nanoid';
 import { Box } from './Box/Box';
 
+const CONTACTS = 'contacts'
+
 export class App extends Component {
   state = {
     contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedContacts = localStorage.getItem(CONTACTS);
+    const parseContacts = JSON.parse(savedContacts);
+
+    if (parseContacts) {
+      this.setState({ contacts: parseContacts });
+    }
+  }
+  
+  componentDidUpdate(_, prevState) {
+    const { contacts } = this.state;
+    if (contacts !== prevState.contacts) {
+      localStorage.setItem(CONTACTS, JSON.stringify(contacts));
+    }
+  }
+  
 
   addContact = contact => {
     let isName = false;
